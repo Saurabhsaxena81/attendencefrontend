@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Attendance Viewer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <h1>Attendance Viewer</h1>
+    <div class="controls">
+      <input id="searchInput" type="search" placeholder="Search (Name / EmployeeID / Status)"/>
+      <select id="employeeFilter">
+        <option value="">All Employees</option>
+      </select>
+      <label class="small">
+        From <input id="fromDate" type="date" />
+      </label>
+      <label class="small">
+        To <input id="toDate" type="date" />
+      </label>
+      <button id="refreshBtn">Refresh</button>
+      <button id="downloadBtn">Download CSV</button>
+    </div>
+  </header>
+
+  <main>
+    <div id="status" class="status">Loading...</div>
+    <div class="table-wrap">
+      <table id="attendanceTable">
+        <thead id="tableHead"></thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer>
+    <small>Backend endpoint: <code>http://localhost:5000/attendance</code></small>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
