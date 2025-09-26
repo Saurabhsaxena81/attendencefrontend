@@ -1,5 +1,5 @@
 // app.js - vanilla JS frontend for attendance
-const API = "http://localhost:5000/attendance"; // backend endpoint
+const API = "https://adriot-attendce-backend.vercel.app/attendance"; // backend endpoint
 
 const statusEl = document.getElementById("status");
 const tableHead = document.getElementById("tableHead");
@@ -23,10 +23,12 @@ function showStatus(msg, isError) {
 function formatBadge(status) {
   if (!status) return "";
   const s = String(status).toLowerCase();
-  if (s.includes("present")) return `<span class="badge present">Present</span>`;
+  if (s.includes("present"))
+    return `<span class="badge present">Present</span>`;
   if (s.includes("half")) return `<span class="badge half">Half Day</span>`;
   if (s.includes("week")) return `<span class="badge weekoff">Week Off</span>`;
-  if (s.includes("missing") || s === "") return `<span class="badge missing">Missing</span>`;
+  if (s.includes("missing") || s === "")
+    return `<span class="badge missing">Missing</span>`;
   return `<span class="badge weekoff">${status}</span>`;
 }
 
@@ -77,12 +79,14 @@ function populateEmployeeFilter(data) {
   });
   // clear
   employeeFilter.innerHTML = '<option value="">All Employees</option>';
-  Array.from(ids).sort().forEach((id) => {
-    const opt = document.createElement("option");
-    opt.value = id;
-    opt.textContent = id;
-    employeeFilter.appendChild(opt);
-  });
+  Array.from(ids)
+    .sort()
+    .forEach((id) => {
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = id;
+      employeeFilter.appendChild(opt);
+    });
 }
 
 function applyFilters() {
@@ -91,9 +95,7 @@ function applyFilters() {
   const search = searchInput.value.trim().toLowerCase();
   if (search) {
     filtered = filtered.filter((r) =>
-      Object.values(r).some((v) =>
-        String(v).toLowerCase().includes(search)
-      )
+      Object.values(r).some((v) => String(v).toLowerCase().includes(search))
     );
   }
 
@@ -101,7 +103,9 @@ function applyFilters() {
   if (emp) {
     filtered = filtered.filter((r) => {
       return (
-        String(r.EmployeeID || r.EmployeeId || r.employeeId || "").toLowerCase() === emp.toLowerCase()
+        String(
+          r.EmployeeID || r.EmployeeId || r.employeeId || ""
+        ).toLowerCase() === emp.toLowerCase()
       );
     });
   }
@@ -164,18 +168,23 @@ function downloadCSV() {
   filteredRows = rawData.filter((r) => {
     let ok = true;
     if (search) {
-      ok = Object.values(r).some((v) => String(v).toLowerCase().includes(search));
+      ok = Object.values(r).some((v) =>
+        String(v).toLowerCase().includes(search)
+      );
     }
     if (ok && emp) {
-      ok = (String(r.EmployeeID || r.EmployeeId || r.employeeId || "").toLowerCase() === emp.toLowerCase());
+      ok =
+        String(
+          r.EmployeeID || r.EmployeeId || r.employeeId || ""
+        ).toLowerCase() === emp.toLowerCase();
     }
     if (ok && from) {
       const d = r.Date || r.date;
-      ok = d ? (new Date(d) >= new Date(from)) : false;
+      ok = d ? new Date(d) >= new Date(from) : false;
     }
     if (ok && to) {
       const d = r.Date || r.date;
-      ok = d ? (new Date(d) <= new Date(to)) : false;
+      ok = d ? new Date(d) <= new Date(to) : false;
     }
     return ok;
   });
@@ -183,12 +192,14 @@ function downloadCSV() {
   const cols = Object.keys(filteredRows[0] || {});
   const csvRows = [cols.join(",")];
   filteredRows.forEach((r) => {
-    const row = cols.map((c) => {
-      const v = r[c] ?? "";
-      // escape quotes
-      const s = String(v).replace(/"/g, '""');
-      return `"${s}"`;
-    }).join(",");
+    const row = cols
+      .map((c) => {
+        const v = r[c] ?? "";
+        // escape quotes
+        const s = String(v).replace(/"/g, '""');
+        return `"${s}"`;
+      })
+      .join(",");
     csvRows.push(row);
   });
 
@@ -197,7 +208,7 @@ function downloadCSV() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `attendance_${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `attendance_${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();
